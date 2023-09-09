@@ -5,6 +5,8 @@
 @Author  : alexanderwu
 @File    : action.py
 """
+import subprocess
+import pkg_resources
 from abc import ABC
 from typing import Optional
 
@@ -27,6 +29,15 @@ class Action(ABC):
         self.desc = ""
         self.content = ""
         self.instruct_content = None
+
+    @staticmethod
+    def check_and_install_library(lib_name: str):
+        try:
+            dist = pkg_resources.get_distribution(lib_name)
+            print("{} ({}) is installed".format(dist.key, dist.version))
+        except pkg_resources.DistributionNotFound:
+            print("{} is NOT installed".format(lib_name))
+            subprocess.call(["pip", "install", lib_name])
 
     def set_prefix(self, prefix, profile):
         """Set prefix for later usage"""
