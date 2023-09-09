@@ -40,6 +40,8 @@ async def startup(
     await company.run(n_round=n_round)
 
 
+import os
+
 def main(
     prompt: str,
     investment: float = 3.0,
@@ -58,9 +60,18 @@ def main(
     :param code_review: Whether to use code review.
     :return:
     """
+    # Check if the prompt is a file path
+    if os.path.isfile(prompt):
+        # If it is, read the file and use its content as the idea
+        with open(prompt, 'r') as file:
+            idea = file.read()
+    else:
+        # If it's not a file path, use the prompt as the idea directly
+        idea = prompt
+
     if platform.system() == "Windows":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(startup(prompt, investment, n_round,
+    asyncio.run(startup(idea, investment, n_round,
                 code_review, run_tests, implement))
 
 
