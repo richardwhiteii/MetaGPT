@@ -37,7 +37,11 @@ class Action(ABC):
             print("{} ({}) is installed".format(dist.key, dist.version))
         except pkg_resources.DistributionNotFound:
             print("{} is NOT installed".format(lib_name))
-            subprocess.call(["pip", "install", lib_name])
+            try:
+                subprocess.check_call(["pip", "install", lib_name])
+            except subprocess.CalledProcessError as e:
+                print("Failed to install {}: {}".format(lib_name, str(e)))
+                # Attempt to fix the issue here
 
     def set_prefix(self, prefix, profile):
         """Set prefix for later usage"""
