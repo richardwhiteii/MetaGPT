@@ -38,7 +38,8 @@ class DebugError(Action):
         if "PASS" in context:
             return "", "the original code works fine, no need to debug"
         
-        file_name = re.search("## File To Rewrite:\s*(.+\\.py)", context).group(1)
+        match = re.search("## File To Rewrite:\s*(.+\\.py)", context)
+        file_name = match.group(1) if match else None
 
         logger.info(f"Debug and rewrite {file_name}")
 
